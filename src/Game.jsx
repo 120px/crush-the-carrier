@@ -9,6 +9,7 @@ const Game = () => {
 
     const [ballHolder, setBallHolder] = useState(null);
     const [isBallPickedUp, setIsBallPickedUp] = useState(true);
+    
 
     return (
         <div style={{ width: "100vw", height: "100vh" }}>
