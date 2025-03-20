@@ -1,42 +1,38 @@
-import { useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
-import Player from "./Player";
+import { Physics, RigidBody, useRapier } from "@react-three/rapier";
 import Ball from "./Ball";
+import Player from "./Player";
 
 const Game = () => {
+  const [ballHolder, setBallHolder] = useState(null);
+  const [isBallPickedUp, setIsBallPickedUp] = useState(null);
+  const ballRef = useRef();
 
-    const [ballHolder, setBallHolder] = useState(null);
-    const [isBallPickedUp, setIsBallPickedUp] = useState(true);
-    
+  const handlePickup = (playerId) => {
+    setBallCarrier(playerId);
+  };
 
-    return (
-        <div style={{ width: "100vw", height: "100vh" }}>
-            <Canvas shadows camera={{ position: [0, 10, 10], fov: 50 }}>
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[5, 10, 5]} castShadow intensity={1} />
+  return (
+    <Canvas camera={{ position: [0, 7, 10], fov: 55 }}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[5, 10, 5]} intensity={1} />
+      <Suspense>
+        <Physics gravity={[0, 0, 0]}>
+          <RigidBody type="dynamic">
+            <mesh position={[0, -0.5, 0]}>
+              <boxGeometry args={[20, 1, 20]} />
+              <meshStandardMaterial color="green" />
+            </mesh>
+          </RigidBody>
 
-                <Physics>
-                    {/* Ground */}
-                    <CuboidCollider position={[0, 0, 0]} args={[20, 0, 20]}>
-                        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-                            <planeGeometry args={[20, 20]} />
-                            <meshStandardMaterial color="green" />
-                        </mesh>
-                    </CuboidCollider>
+          <Ball ballHolder={ballHolder} setBallHolder={setBallHolder} setIsBallPickedUp={setIsBallPickedUp} isBallPickedUp={isBallPickedUp} />
 
-                    {/* Player */}
-                    <Player />
-
-                    {/* Ball */}
-                    <Ball isBallPickedUp={isBallPickedUp} setBallHolder={setBallHolder} ballHolder={ballHolder} setIsBallPickedUp={setIsBallPickedUp} />
-                </Physics>
-
-                <OrbitControls />
-            </Canvas>
-        </div>
-    );
-}
+          <Player id="player" onPickup={handlePickup} ballHolder={ballHolder} />
+        </Physics>
+      </Suspense>
+    </Canvas>
+  );
+};
 
 export default Game;

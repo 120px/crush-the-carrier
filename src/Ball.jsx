@@ -27,6 +27,7 @@ const Ball = ({ setBallHolder, ballHolder, setIsBallPickedUp, isBallPickedUp }) 
 
     useEffect(() => {
         if (ballHolder !== null) {
+            console.log("Placing ball in player hands");
             placeBallInPlayerHands();
             console.log(ballRef.current.type)
         }

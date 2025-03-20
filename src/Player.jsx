@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { RigidBody, CapsuleCollider } from "@react-three/rapier";
+import { RigidBody, CapsuleCollider, RapierRigidBody } from "@react-three/rapier";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "./hooks/useKeyboardControls";
 import { usePlayerSkills } from "./playerskills/PlayerSkills";
 import { useEffect } from "react";
 
-export default function Player({ }) {
+export default function Player({ ballHolder }) {
     const playerRef = useRef();
     playerRef.name = "player";
     const { moveForward, moveBackward, moveLeft, moveRight, jukeLeft, jukeRight, tackleAction } = useKeyboardControls();
@@ -20,7 +20,6 @@ export default function Player({ }) {
 
         if (tackleAction) {
             tackle();
-            console.log("tackling");
         }
 
         if (jukeLeft) {
@@ -69,15 +68,20 @@ export default function Player({ }) {
             mass={1}
             gravityScale={1}
             lockRotations={true}
-            onCollisionEnter={({ other }) => { }}
+            onCollisionEnter={({ other }) => {
+                if (other.rigidBodyObject.name === "player" && ballHolder) {
+
+                    console.log("Player collided with ball!");
+                }
+
+            }}
         >
             <mesh castShadow>
-                {/* Player Model */}
+
                 <capsuleGeometry args={[0.5, 0.25, 16, 32]} />
                 <meshStandardMaterial color={isTackling ? "red" : "blue"} />
 
-                {/* Direction Arrow */}
-                <mesh position={[0, .25, .7]} rotation={[Math.PI / 2, 0, 0]}>
+                <mesh position={[0, .25, 0.7]} rotation={[Math.PI / 2, 0, 0]}>
                     <coneGeometry args={[0.15, 0.3, 8]} />
                     <meshStandardMaterial color="yellow" />
                 </mesh>

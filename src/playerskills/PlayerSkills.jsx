@@ -41,22 +41,13 @@ export function usePlayerSkills(playerRef) {
 
         // Ensure the player is awake
         playerRef.current.wakeUp();
+        console.log("Velocity before:", playerRef.current.linvel());
 
-        // Get player's facing direction from quaternion rotation
-        const rotationQuat = playerRef.current.rotation();
-        const rotationEuler = new THREE.Euler().setFromQuaternion(rotationQuat);
-        const forwardAngle = rotationEuler.y;
+        playerRef.current.applyImpulse({ x: 0, y: 300, z: 10000 }, true);
 
-        // Calculate dive direction
-        const diveStrength = 1000; // Adjust as needed
-        const impulse = {
-            x: Math.sin(400) * diveStrength,
-            y: 3000, // Small upward lift
-            z: Math.cos(700) * diveStrength,
-        };
-
-        playerRef.current.applyImpulse({ x: 0.0, y: 10.0, z: 1000.0 }, true);
         console.log("Velocity after:", playerRef.current.linvel());
+
+        console.log(playerRef.current.mass())
 
         setTimeout(() => {
             setIsTackling(false);
