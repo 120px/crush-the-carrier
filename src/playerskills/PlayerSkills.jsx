@@ -41,17 +41,12 @@ export function usePlayerSkills(playerRef) {
 
         // Ensure the player is awake
         playerRef.current.wakeUp();
-        console.log("Velocity before:", playerRef.current.linvel());
 
-        playerRef.current.applyImpulse({ x: 0, y: 300, z: 10000 }, true);
-
-        console.log("Velocity after:", playerRef.current.linvel());
-
-        console.log(playerRef.current.mass())
+        playerRef.current.applyImpulse({x:0, y:1, z:1}, true);
 
         setTimeout(() => {
             setIsTackling(false);
-        }, 1000); 
+        }, 300); 
     };
 
     const stiffArm = () => {
